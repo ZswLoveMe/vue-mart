@@ -1,44 +1,87 @@
 <template>
   <div id="app">
-    <el-tabs v-model="activeName" @tab-click="handleClick">
-      <el-tab-pane label="Home" name="home"></el-tab-pane>
-      <el-tab-pane label="About" name="about"></el-tab-pane>
-      <el-tab-pane label="Login" name="login"></el-tab-pane>
+    <div>
+      <el-button type="text" @click="handleQuit" v-if="isLogin">退出</el-button>
+      <el-button type="text" @click="handleLogin " v-if="!isLogin">登录</el-button>
+    </div>
+    <el-tabs v-model="activeName" @tab-click="handleClick" ref="tabs">
+      <el-tab-pane v-for="(item,index) in tabs" :label="item.label" :name="item.value" :key="index"></el-tab-pane>
     </el-tabs>
-    <el-button type="text" @click="handleQuit">退出</el-button>
     <router-view/>
   </div>
 </template>
 
 <script>
-export default {
-  name: 'App',
-  data(){
-    return{
-      activeName:'home'
-    }
-  },
-  methods:{
-    handleClick(){
-      if (this.activeName == 'about'){
-        this.$router.push('about')
-      }
-      else if(this.activeName == 'login'){
-        this.$router.push('login')
-      }
-      else if(this.activeName == 'home'){
-        this.$router.push('home')
+  import {mapGetters} from "vuex"
+
+  export default {
+    name: "App",
+    computed: {...mapGetters(["isLogin"])},
+    watch:  {
+        $route(route){
+          this.$nextTick(()=>{
+            this.loadingIcon()
+          })
       }
     },
-    handleQuit(){
+    data() {
+      return {
+        activeName: "/",
+        tabs: [
+          {
+            label: "Home", value: "/", icon: "el-icon-s-home"
+          },
+          {
+            label: "Cart", value: "/cart", icon: "el-icon-s-cooperation"
+          },
+          {
+            label: "Login", value: "/login", icon: "el-icon-setting"
+          }
+        ]
+      }
+    },
+    methods: {
+      handleClick() {
+        this.$router.push(this.activeName)
+      },
+      handleQuit() {
+        this.$http.get("/api/logout")
+      },
+      handleLogin() {
+        this.$http.get("/login")
+      },
+      loadingIcon(){
+        this.$nextTick(()=>{
+          this.$refs.tabs.$children[0].$refs.tabs.forEach((item,i) =>{
+            if(item.classList[i] != this.tabs[i].icon){
+              item.classList.add(this.tabs[i].icon)
+            }
+          })
+        })
+
+      }
+    },
+    created() {
+      this.$nextTick(()=>{
+        this.loadingIcon()
+      })
+    },
+    mounted() {
 
     }
-  }
 
-}
+  }
 </script>
 
-<style >
+<style scoped lang="scss">
+  /deep/ .el-tabs__nav {
+      width: 400px;
+    /deep/ .el-tabs__item{
+      text-align: center;
+      width: 150px;
+      font-size: 16px;
+    }
+  }
 
 
 </style>

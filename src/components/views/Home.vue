@@ -16,8 +16,8 @@
 
     },
     async created() {
-      // let res = await  this.$http.get('/api/goods')
-      //  console.log('res:',res);
+      const res = await this.$http.get('/api/goods')
+      console.log(res);
     }
   }
 </script>

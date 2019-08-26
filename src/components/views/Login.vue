@@ -54,10 +54,10 @@
         if (code == 0) {
           localStorage.setItem("token", token)//缓存进本地
           this.$store.commit('setToken', token)//从入store
+          console.log(' this.$route.query：',  this.$route.query)
+          const redirect = this.$route.query.redirect|| '/'
           //     回跳
-          const {redirect} = this.$route.query || '/'
-           console.log('redirect:',redirect);
-          this.$router.push(redirect)
+          this.$router.push(redirect);
         } else {
           this.$message({
             showClose: true,

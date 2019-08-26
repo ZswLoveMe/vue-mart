@@ -3,12 +3,18 @@ import Router from 'vue-router'
 import Login from "@/components/views/Login"
 import store from '@/store'
 import Home from "@/components/views/Home"
+import Cart from "../components/views/Cart"
 
 Vue.use(Router)
 let router = new Router({
   mode: 'history',
   base: process.env.BASE_URL,
   routes: [
+    {
+      path:'/cart',
+      name:'cart',
+      component:Cart
+    },
     {
       path:'/',
       component:Home
